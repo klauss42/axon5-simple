@@ -24,12 +24,15 @@ class CustomerController(
     return Mono.fromFuture(
       queryGateway.query(
         CustomerFindOneQuery(customerId),
-        ResponseTypes.instanceOf(CustomerDto::class.java),
+        ResponseTypes.optionalInstanceOf(CustomerDto::class.java),
       )
     )
-      .doOnNext { log.info("[client4] Query result: {}", it) }
-      .doOnSuccess { if (it == null) log.info("[client4] Query returned empty (no customer found for id={})", customerId) }
-      .map { ResponseEntity.ok(it) }
-      .defaultIfEmpty(ResponseEntity.notFound().build())
+      .doOnNext {
+        log.info("[client4] Query result: {}", it.orElse(null))
+      }
+      .map { opt ->
+        if (opt.isPresent) ResponseEntity.ok(opt.get())
+        else ResponseEntity.notFound().build()
+      }
   }
 }
