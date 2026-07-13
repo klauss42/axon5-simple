@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: client5
+  docker:
+    compose:
+      enabled: false   # server5 owns AxonServer startup
+
+server:
+  port: 8082
+
+axon:
+  converter:
+    general: jackson
+  axonserver:
+    servers: localhost:8124
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+logging:
+  level:
+    root: INFO
+    # Axon Framework core (messaging, query handling, lifecycle)
+    org.axonframework: DEBUG
+    # Axoniq Framework (AxonServer connector, gRPC transport) — Axon 5 only
+    io.axoniq: DEBUG
+    io.axoniq.axonserver.connector.impl.HeartbeatMonitor: INFO
+    io.axoniq.framework.axonserver.connector.util: INFO
+    io.axoniq.axonserver.connector.impl.FlowControlledStream: INFO
+
+springdoc:
+  swagger-ui:
+    try-it-out-enabled: true

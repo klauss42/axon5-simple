@@ -1,0 +1,27 @@
+# EditorConfig helps developers define and maintain consistent
+# coding styles between different editors and IDEs
+# editorconfig.org
+
+root = true
+
+[*]
+# Change these settings to your own preference
+indent_style = space
+indent_size = 2
+# We recommend you to keep these unchanged
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+max_line_length = 140
+
+# Fletec specific
+ij_formatter_off_tag = @formatter:off
+ij_formatter_on_tag = @formatter:on
+ij_formatter_tags_enabled = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.mustache]
+insert_final_newline = false

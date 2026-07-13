@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.axonframework.examples</groupId>
+  <artifactId>axon5-simple</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+
+  <name>Axon5 Simple - Multi-App Demo</name>
+  <description>
+    Demonstrates cross-version query dispatch: server5 (Axon 5) handles a query,
+    client5 (Axon 5) and client4 (Axon 4) dispatch it via AxonServer.
+  </description>
+
+  <modules>
+    <module>server5</module>
+    <module>client5</module>
+    <module>client4</module>
+  </modules>
+
+  <properties>
+    <java.version>21</java.version>
+    <maven.compiler.release>${java.version}</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <kotlin.version>2.4.0</kotlin.version>
+    <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
+    <kotlin.compiler.incremental>false</kotlin.compiler.incremental>
+
+    <maven-compiler.version>3.15.0</maven-compiler.version>
+    <maven-surefire.version>3.5.5</maven-surefire.version>
+  </properties>
+
+  <build>
+    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+    <pluginManagement>
+      <plugins>
+        <!-- Kotlin compiler — shared config inherited by all child modules -->
+        <plugin>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <version>${kotlin.version}</version>
+          <extensions>true</extensions>
+          <executions>
+            <execution>
+              <id>compile</id>
+              <phase>compile</phase>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                </sourceDirs>
+              </configuration>
+            </execution>
+            <execution>
+              <id>test-compile</id>
+              <phase>test-compile</phase>
+              <goals>
+                <goal>test-compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                </sourceDirs>
+              </configuration>
+            </execution>
+          </executions>
+          <dependencies>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-noarg</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-allopen</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <jvmTarget>${java.version}</jvmTarget>
+            <compilerPlugins>
+              <plugin>jpa</plugin>
+              <plugin>all-open</plugin>
+              <plugin>spring</plugin>
+            </compilerPlugins>
+            <pluginOptions>
+              <option>all-open:annotation=jakarta.persistence.Entity</option>
+              <option>all-open:annotation=jakarta.persistence.Embeddable</option>
+              <option>all-open:annotation=jakarta.persistence.MappedSuperclass</option>
+            </pluginOptions>
+          </configuration>
+        </plugin>
+
+        <!-- Disable default Java compiler (Kotlin handles everything) -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler.version}</version>
+          <executions>
+            <execution>
+              <id>default-compile</id>
+              <phase>none</phase>
+            </execution>
+            <execution>
+              <id>default-testCompile</id>
+              <phase>none</phase>
+            </execution>
+            <execution>
+              <id>compile</id>
+              <phase>compile</phase>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>testCompile</id>
+              <phase>test-compile</phase>
+              <goals>
+                <goal>testCompile</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+</project>

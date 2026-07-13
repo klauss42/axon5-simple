@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: client4
+
+server:
+  port: 8083
+
+# Axon 4 serializer config — use Jackson to match server5's Jackson serialization
+axon:
+  serializer:
+    general: jackson
+    events: jackson
+    messages: jackson
+  axonserver:
+    servers: localhost:8124
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+logging:
+  level:
+    root: INFO
+    # Axon Framework core (messaging, query handling, lifecycle)
+    org.axonframework: DEBUG
+    io.axoniq.axonserver.connector.impl.HeartbeatMonitor: INFO
+    org.axonframework.axonserver.connector.util: INFO
