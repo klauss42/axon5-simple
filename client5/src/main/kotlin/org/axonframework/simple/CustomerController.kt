@@ -31,4 +31,31 @@ class CustomerController(
       .map { ResponseEntity.ok(it) }
       .defaultIfEmpty(ResponseEntity.notFound().build())
   }
+
+  @GetMapping
+  fun getAll(): Mono<ResponseEntity<List<CustomerDto>>> {
+    log.info("[client5] Dispatching CustomerFindAllQuery")
+    return Mono.fromFuture(
+      queryGateway.queryMany(
+        CustomerFindAllQuery(),
+        CustomerDto::class.java
+      )
+    )
+      .doOnNext { log.info("[client5] Query result: {}", it) }
+      .map { ResponseEntity.ok(it) }
+  }
+
+  @GetMapping("/page")
+  fun getPage(): Mono<ResponseEntity<List<CustomerDto>>> {
+    log.info("[client5] Dispatching CustomerFindPageQuery")
+    return Mono.fromFuture(
+      queryGateway.queryMany(
+        CustomerFindPageQuery(),
+        CustomerDto::class.java
+      )
+    )
+      .doOnNext { log.info("[client5] Query result: {}", it) }
+      .map { ResponseEntity.ok(it) }
+  }
+
 }

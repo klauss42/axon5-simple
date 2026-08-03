@@ -28,11 +28,38 @@ class CustomerController(
       )
     )
       .doOnNext {
-        log.info("[client4] Query result: {}", it.orElse(null))
+        log.info("[client4] Query result: {}", it)
       }
       .map { opt ->
         if (opt.isPresent) ResponseEntity.ok(opt.get())
         else ResponseEntity.notFound().build()
       }
   }
+
+  @GetMapping
+  fun getAll(): Mono<ResponseEntity<List<CustomerDto>>> {
+    log.info("[client4] Dispatching CustomerFindAllQuery")
+    return Mono.fromFuture(
+      queryGateway.query(
+        CustomerFindAllQuery(),
+        ResponseTypes.multipleInstancesOf(CustomerDto::class.java)
+      )
+    )
+      .doOnNext { log.info("[client4] Query result: {}", it) }
+      .map { ResponseEntity.ok(it) }
+  }
+
+  @GetMapping("/page")
+  fun getPage(): Mono<ResponseEntity<List<CustomerDto>>> {
+    log.info("[client4] Dispatching CustomerFindPageQuery")
+    return Mono.fromFuture(
+      queryGateway.query(
+        CustomerFindPageQuery(),
+        ResponseTypes.multipleInstancesOf(CustomerDto::class.java)
+      )
+    )
+      .doOnNext { log.info("[client4] Query result: {}", it) }
+      .map { ResponseEntity.ok(it) }
+  }
+
 }

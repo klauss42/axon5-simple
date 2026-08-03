@@ -4,6 +4,8 @@ package org.axonframework.simple
 // Axon 4 uses FQCN ("org.axonframework.simple.CustomerFindOneQuery") as the query name,
 // which matches the Axon 5 server because it also falls back to FQCN (no @Query annotation).
 data class CustomerFindOneQuery(val customerId: String)
+class CustomerFindAllQuery
+class CustomerFindPageQuery
 
 data class CustomerDto(
   val customerId: String,

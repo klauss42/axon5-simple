@@ -2,6 +2,8 @@ package org.axonframework.simple
 
 import org.axonframework.messaging.queryhandling.annotation.QueryHandler
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -23,5 +25,21 @@ class CustomerQueryHandler {
     val result = Optional.ofNullable(customers[query.customerId])
     log.info("[server5] Result: {}", result.orElse(null) ?: "<not found>")
     return result
+  }
+
+  @QueryHandler
+  fun handle(query: CustomerFindAllQuery): List<CustomerDto> {
+    log.info("[server5] Handling CustomerFindAllQuery")
+    val result = customers.values.toList()
+    log.info("[server5] Result: {}", result)
+    return result
+  }
+
+  @QueryHandler
+  fun handle(query: CustomerFindPageQuery): Page<CustomerDto> {
+    log.info("[server5] Handling CustomerFindPageQuery")
+    val result = customers.values.toList()
+    log.info("[server5] Result: {}", result)
+    return PageImpl(result)
   }
 }
