@@ -11,7 +11,7 @@ client when the handler returns a list or Page.
 |-----------|--------------|---------------------------------------------------|
 | `server5` | 5.2.2        | `@QueryHandler` returning `Optional<CustomerDto>` |
 | `client5` | 5.2.2        | queries `server5`, works correctly                |
-| `client4` | 4.13.2       | queries `server5`, fails on empty result          |
+| `client4` | 4.13.2       | queries `server5`, but returns wrong result       |
 
 All three apps are Spring Boot + Kotlin and connect to AxonServer (see `docker-compose.yaml`).
 
