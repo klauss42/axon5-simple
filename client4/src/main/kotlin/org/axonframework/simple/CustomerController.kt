@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @RestController
@@ -27,9 +28,7 @@ class CustomerController(
         ResponseTypes.optionalInstanceOf(CustomerDto::class.java),
       )
     )
-      .doOnNext {
-        log.info("[client4] Query result: {}", it)
-      }
+      .doOnNext { log.info("[client4] Query result: {}", it) }
       .map { opt ->
         if (opt.isPresent) ResponseEntity.ok(opt.get())
         else ResponseEntity.notFound().build()
@@ -59,6 +58,40 @@ class CustomerController(
       )
     )
       .doOnNext { log.info("[client4] Query result: {}", it) }
+      .map { ResponseEntity.ok(it) }
+  }
+
+  @GetMapping("/subscription")
+  fun getSubscription(): Mono<ResponseEntity<List<CustomerDto>>> {
+    log.info("[client4] Dispatching subscriptionQuery")
+
+    val subscriptionQuery = queryGateway.subscriptionQuery(
+      CustomerFindPageQuery(),
+      ResponseTypes.multipleInstancesOf(CustomerDto::class.java),
+      ResponseTypes.instanceOf(CustomerDto::class.java)
+    )
+
+    return subscriptionQuery
+      .initialResult()
+      .doFinally { subscriptionQuery.close() }
+      .defaultIfEmpty(emptyList())
+      .map { ResponseEntity.ok(it) }
+
+  }
+
+  @GetMapping("/streaming")
+  fun getStreaming(): Mono<ResponseEntity<List<CustomerDto>>> {
+    log.info("[client4] Dispatching streamingQuery")
+    val publisher = queryGateway.streamingQuery(
+      CustomerFindPageQuery(),
+      CustomerDto::class.java
+    )
+    return Flux
+      .from(publisher)
+      .doOnNext { log.info("[client4] Streaming next: {}", it) }
+      .doFinally { log.info("[client4] Streaming completed") }
+      .collectList()
+      .doOnSuccess { log.info("[client4] Streaming result: {}", it) }
       .map { ResponseEntity.ok(it) }
   }
 

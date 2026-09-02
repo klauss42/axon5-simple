@@ -1,11 +1,13 @@
 spring:
   application:
-    name: client4
+    name: server4
+  docker:
+    compose:
+      enabled: false   # start AxonServer manually: docker compose up -d
 
 server:
-  port: 8083
+  port: 8085
 
-# Axon 4 serializer config — use Jackson to match server5's Jackson serialization
 axon:
   serializer:
     general: jackson
@@ -24,6 +26,5 @@ logging:
   level:
     root: INFO
     # Axon Framework core (messaging, query handling, lifecycle)
-    org.axonframework: INFO
-    io.axoniq.axonserver.connector.impl.HeartbeatMonitor: INFO
-    org.axonframework.axonserver.connector.util: INFO
+    org.axonframework: DEBUG
+    org.axonframework.axonserver: INFO

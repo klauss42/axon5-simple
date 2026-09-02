@@ -18,7 +18,7 @@
 
   <properties>
     <spring.boot.version>4.1.0</spring.boot.version>
-    <axon.version>5.3.0</axon.version>
+    <axon.version>5.3.1</axon.version>
     <jackson.version>3.1.2</jackson.version>
     <kotlinx-coroutines.version>1.11.0</kotlinx-coroutines.version>
     <springdoc-openapi.version>3.0.3</springdoc-openapi.version>
@@ -93,6 +93,17 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-test</artifactId>
+      <version>${axon.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <!-- OpenAPI / Swagger UI -->

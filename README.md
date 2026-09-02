@@ -2,45 +2,53 @@
 
 ## Purpose
 
-This project reproduces a cross-version incompatibility between an **Axon Framework 5** query handler and an **Axon Framework 4** query
-client when the handler returns a list or Page.
+This project reproduces a cross-version incompatibility between **Axon Framework 5** query handler and an **Axon Framework 4** query client.
 
 ## Applications
 
-| App       | Axon version | Role                                              |
-|-----------|--------------|---------------------------------------------------|
-| `server5` | 5.2.2        | `@QueryHandler` returning `Optional<CustomerDto>` |
-| `client5` | 5.2.2        | queries `server5`, works correctly                |
-| `client4` | 4.13.2       | queries `server5`, but returns wrong result       |
+| App       | Axon version | Role                                  |
+|-----------|--------------|---------------------------------------|
+| `server4` | 4.13.2       | provides `@QueryHandler`s using Axon4 |
+| `server5` | 5.3.1        | provides `@QueryHandler`s using Axon5 |
+| `client5` | 5.2.2        | dispatches queries                    |
+| `client4` | 4.13.2       | dispatches queries                    |
 
-All three apps are Spring Boot + Kotlin and connect to AxonServer (see `docker-compose.yaml`).
+All apps are Spring Boot + Kotlin and connect to AxonServer (see `docker-compose.yaml`).
 
-## Query lists
-
+## Tests using AF4 client against AF5 server
 ```bash
 docker compose up -d          # start AxonServer
 ./mvnw spring-boot:run -pl server5
 ./mvnw spring-boot:run -pl client4
-./mvnw spring-boot:run -pl client5
-```
 
-### AF5 client
-```bash
-curl  http://localhost:8082/customer
-[{"customerId":"1","name":"Alice"},{"customerId":"2","name":"Bob"},{"customerId":"3","name":"Charlie"}]%
+# streamingQuery works
+curl  http://localhost:8083/customer/streaming   
+[{"customerId":"1","name":"Alice"},{"customerId":"2","name":"Bob"},{"customerId":"3","name":"Charlie"}]
+    
+# subscriptionQuery fails
+curl  http://localhost:8083/customer/subscription
+{"timestamp":1788363218715,"path":"/customer/subscription","status":500,"error":"Internal Server Error","requestId":"ab249c68-3"}    
 
-curl  http://localhost:8082/customer/page
-[{"customerId":"1","name":"Alice"},{"customerId":"2","name":"Bob"},{"customerId":"3","name":"Charlie"}]%
-```
-
-### AF4 client
-
-```bash
+# normal query works
 curl  http://localhost:8083/customer
-[{"customerId":"1","name":"Alice"}]%
-
-curl  http://localhost:8083/customer/page
-[{"customerId":"1","name":"Alice"}]%
-
+[{"customerId":"1","name":"Alice"},{"customerId":"2","name":"Bob"},{"customerId":"3","name":"Charlie"}]
 ```
 
+## Tests using AF5 client against AF5 server
+```bash
+docker compose up -d          # start AxonServer
+./mvnw spring-boot:run -pl server5
+./mvnw spring-boot:run -pl client5
+
+# streamingQuery works
+curl  http://localhost:8082/customer/streaming   
+[{"customerId":"1","name":"Alice"},{"customerId":"2","name":"Bob"},{"customerId":"3","name":"Charlie"}]
+    
+# subscriptionQuery fails
+curl  http://localhost:8082/customer/subscription
+{"timestamp":1788363218715,"path":"/customer/subscription","status":500,"error":"Internal Server Error","requestId":"ab249c68-3"}    
+
+# normal query works
+curl  http://localhost:8082/customer
+[{"customerId":"1","name":"Alice"},{"customerId":"2","name":"Bob"},{"customerId":"3","name":"Charlie"}]
+```

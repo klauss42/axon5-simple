@@ -3,8 +3,8 @@ services:
     image: docker.axoniq.io/axoniq/axonserver:2026.0.3
     container_name: simple-axon-server
     ports:
-      - "8024:8024"
-      - "8124:8124"
+      - "8025:8024"
+      - "8125:8124"
     environment:
       axoniq.axonserver.standalone: true
       axoniq.axonserver.standalone-dcb: false

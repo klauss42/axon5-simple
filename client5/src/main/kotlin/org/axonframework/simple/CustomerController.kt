@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @RestController
@@ -57,5 +58,41 @@ class CustomerController(
       .doOnNext { log.info("[client5] Query result: {}", it) }
       .map { ResponseEntity.ok(it) }
   }
+
+  @GetMapping("/subscription")
+  fun getSubscription(): Mono<ResponseEntity<List<CustomerDto>>> {
+    log.info("[client5] Dispatching subscriptionQuery")
+
+    val publisher = queryGateway.subscriptionQuery(
+      CustomerFindPageQuery(),
+      CustomerDto::class.java
+    )
+    return Flux
+      .from(publisher)
+      .doOnNext { log.info("[client5] Subscription next: {}", it) }
+      .doFinally { log.info("[client5] Subscription completed") }
+      .take(3) // dirty, but just want to complete the stream for this test
+      .collectList()
+      .doOnSuccess { log.info("[client5] Subscription result: {}", it) }
+      .map { ResponseEntity.ok(it) }
+  }
+
+  @GetMapping("/streaming")
+  fun getStreaming(): Mono<ResponseEntity<List<CustomerDto>>> {
+    log.info("[client5] Dispatching streamingQuery")
+
+    val publisher = queryGateway.streamingQuery(
+      CustomerFindPageQuery(),
+      CustomerDto::class.java
+    )
+    return Flux
+      .from(publisher)
+      .doOnNext { log.info("[client5] Streaming next: {}", it) }
+      .doFinally { log.info("[client5] Streaming completed") }
+      .collectList()
+      .doOnSuccess { log.info("[client5] Streaming result: {}", it) }
+      .map { ResponseEntity.ok(it) }
+  }
+
 
 }

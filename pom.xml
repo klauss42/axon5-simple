@@ -12,13 +12,10 @@
   <packaging>pom</packaging>
 
   <name>Axon5 Simple - Multi-App Demo</name>
-  <description>
-    Demonstrates cross-version query dispatch: server5 (Axon 5) handles a query,
-    client5 (Axon 5) and client4 (Axon 4) dispatch it via AxonServer.
-  </description>
 
   <modules>
     <module>server5</module>
+    <module>server4</module>
     <module>client5</module>
     <module>client4</module>
   </modules>

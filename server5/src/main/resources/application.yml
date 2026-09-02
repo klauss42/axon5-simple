@@ -12,7 +12,7 @@ axon:
   converter:
     general: jackson
   axonserver:
-    servers: localhost:8124
+    servers: localhost:8125
 
 management:
   endpoints:
@@ -24,9 +24,9 @@ logging:
   level:
     root: INFO
     # Axon Framework core (messaging, query handling, lifecycle)
-    org.axonframework: DEBUG
+    org.axonframework: INFO
     # Axoniq Framework (AxonServer connector, gRPC transport) — Axon 5 only
-    io.axoniq: DEBUG
+    io.axoniq: INFO
     io.axoniq.axonserver.connector.impl.HeartbeatMonitor: INFO
     io.axoniq.framework.axonserver.connector.util: INFO
     io.axoniq.axonserver.connector.impl.FlowControlledStream: INFO
