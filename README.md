@@ -8,10 +8,10 @@ This project reproduces a cross-version incompatibility between **Axon Framework
 
 | App       | Axon version | Role                                  |
 |-----------|--------------|---------------------------------------|
-| `server4` | 4.13.2       | provides `@QueryHandler`s using Axon4 |
-| `server5` | 5.3.1        | provides `@QueryHandler`s using Axon5 |
-| `client5` | 5.2.2        | dispatches queries                    |
 | `client4` | 4.13.2       | dispatches queries                    |
+| `server4` | 4.13.2       | provides `@QueryHandler`s using Axon4 |
+| `client5` | 5.3.1        | dispatches queries                    |
+| `server5` | 5.3.1        | provides `@QueryHandler`s using Axon5 |
 
 All apps are Spring Boot + Kotlin and connect to AxonServer (see `docker-compose.yaml`).
 

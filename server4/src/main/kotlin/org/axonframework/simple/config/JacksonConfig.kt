@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 
 @Configuration
-class JacksonConfiguration : BeanClassLoaderAware {
+class JacksonConfig : BeanClassLoaderAware {
   private var beanClassLoader: ClassLoader? = null
 
   @Primary
