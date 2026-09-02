@@ -64,7 +64,7 @@ class CustomerController(
     log.info("[client5] Dispatching subscriptionQuery")
 
     val publisher = queryGateway.subscriptionQuery(
-      CustomerFindPageQuery(),
+      CustomerFindAllQuery(),
       CustomerDto::class.java
     )
     return Flux
@@ -82,7 +82,7 @@ class CustomerController(
     log.info("[client5] Dispatching streamingQuery")
 
     val publisher = queryGateway.streamingQuery(
-      CustomerFindPageQuery(),
+      CustomerFindAllQuery(),
       CustomerDto::class.java
     )
     return Flux

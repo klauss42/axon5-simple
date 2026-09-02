@@ -66,7 +66,7 @@ class CustomerController(
     log.info("[client4] Dispatching subscriptionQuery")
 
     val subscriptionQuery = queryGateway.subscriptionQuery(
-      CustomerFindPageQuery(),
+      CustomerFindAllQuery(),
       ResponseTypes.multipleInstancesOf(CustomerDto::class.java),
       ResponseTypes.instanceOf(CustomerDto::class.java)
     )
@@ -83,7 +83,7 @@ class CustomerController(
   fun getStreaming(): Mono<ResponseEntity<List<CustomerDto>>> {
     log.info("[client4] Dispatching streamingQuery")
     val publisher = queryGateway.streamingQuery(
-      CustomerFindPageQuery(),
+      CustomerFindAllQuery(),
       CustomerDto::class.java
     )
     return Flux
